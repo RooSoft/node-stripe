@@ -1,0 +1,20 @@
+<html>
+	<head>
+		<title>Pay with Stripe</title>
+	</head>
+	<body>
+		<h3>Pay the merchant</h3>
+		<form action='/charge' method='post'>
+			<script
+				src='https:/checkout.stripe.com/checkout.js'
+				class='stripe-button'
+				data-key='{{stripePublicSecret}}'
+				data-amout='2000'
+				data-name='payment for food'
+				data-description='that meal was delicious, so it has to be paid'
+				data-locale='auto'
+				data-currency='cad'>
+			</script>
+		</form>
+	</body>
+</html>
