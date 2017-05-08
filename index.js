@@ -22,8 +22,25 @@ app.get('/paysuccess', (req, res) => {
     res.send('success');
 });
 
+app.post('/chargeExistingCustomer', (req, res) => {
+    const amount = 2000;
+    const customerId = 'cus_AcSLxr53OLTKCD';
 
-app.post('/charge', (req, res) => {
+    stripe.loadCustomer(customerId)
+    .then(customer => {
+        console.log(`customer loaded: ${customer.id}`);
+        return stripe.chargeCustomer(customer, amount);
+    })
+    .then(charge => {
+        console.log(`charge applied ${charge.id}`);
+        res.redirect('/paysuccess');
+    })
+    .catch(error => {
+        console.log(error);
+    });
+});
+
+app.post('/chargeNewCustomer', (req, res) => {
     const amount = 2000;
 
     stripe.createCustomer(req.body.stripeToken)

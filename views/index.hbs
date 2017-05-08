@@ -4,7 +4,7 @@
 	</head>
 	<body>
 		<h3>Pay the merchant</h3>
-		<form action='/charge' method='post'>
+		<form action='/chargeNewCustomer' method='post'>
 			<script
 				src='https:/checkout.stripe.com/checkout.js'
 				class='stripe-button'
@@ -15,6 +15,9 @@
 				data-locale='auto'
 				data-currency='cad'>
 			</script>
+		</form>
+		<form action='/chargeExistingCustomer' method='post'>
+			<input type='submit' value='charge existing customer'></input>
 		</form>
 	</body>
 </html>
