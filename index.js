@@ -1,8 +1,9 @@
 const express = require('express');
 const hbs = require('hbs');
-const stripe = require('stripe')(process.env.STRIPE_PRIVATE_KEY_SECRET);
 const bodyParser = require('body-parser');
 const path = require('path');
+
+const stripe = require('./lib/stripe');
 
 const app = express();
 
@@ -21,30 +22,25 @@ app.get('/paysuccess', (req, res) => {
     res.send('success');
 });
 
-app.post('/charge', (req, res) => {
-    const token = req.body.stripeToken;
-    const chargeAmount = 2000;
 
-    const charge = stripe.charges.create({
-        amount: chargeAmount,
-        currency: 'cad',
-        source: token,
-    }, (err, charge) => {
-        if(err !== undefined && err !== null) {
-            if(err.type === 'StripeCardError') {
-                console.log('Card declined');
-            }
-            else {
-                console.log(err);
-            }
-        }
-        else {
-            console.log('Payment processed successfully');
-            res.redirect('/paysuccess');
-        }
+app.post('/charge', (req, res) => {
+    const amount = 2000;
+
+    stripe.createCustomer(req.body.stripeToken)
+    .then(customer => {
+        console.log(`customer created: ${customer.id}`);
+        return stripe.chargeCustomer(customer, amount);
+    })
+    .then(charge => {
+        console.log(`charge applied ${charge.id}`);
+        res.redirect('/paysuccess');
+    })
+    .catch(error => {
+        console.log(error);
     });
 });
 
 app.listen(3000, () => {
-    console.log('Stripe is running');
+    console.log('Stripe is running on port 3000');
 });
+
