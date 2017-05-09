@@ -43,6 +43,9 @@ app.post('/chargeExistingCustomer', (req, res) => {
 app.post('/chargeNewCustomer', (req, res) => {
     const amount = 2000;
 
+    console.log('------body------');
+    console.dir(req.body);
+
     stripe.createCustomer(req.body.stripeToken)
     .then(customer => {
         console.log(`customer created: ${customer.id}`);
@@ -57,7 +60,9 @@ app.post('/chargeNewCustomer', (req, res) => {
     });
 });
 
-app.listen(3000, () => {
-    console.log('Stripe is running on port 3000');
+const port = process.env.PORT || 3000;
+
+app.listen(port, () => {
+    console.log(`Stripe is running on port ${port}`);
 });
 
